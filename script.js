@@ -13,27 +13,36 @@ function loadQuestion(index) {
     let btn = document.createElement("button");
     btn.className = "option-btn";
     btn.innerText = `${opt} / ${q.options_hi[i]}`;
-    btn.onclick = () => checkAnswer(i, q.correct);
+    btn.onclick = () => checkAnswer(i, q.correct, btn);
     optionsDiv.appendChild(btn);
   });
 
+  // Load video
   let video = document.getElementById("question-video");
   video.src = q.video;
   video.load();
 
+  // Update score
   document.getElementById("score").innerText = `Score: ${score}/${questions.length}`;
 }
 
-function checkAnswer(selected, correct) {
+function checkAnswer(selected, correct, btn) {
+  let options = document.querySelectorAll(".option-btn");
+
+  options.forEach(b => (b.disabled = true)); // disable after click
+
   if (selected === correct) {
-    alert("✅ Correct!");
+    btn.style.backgroundColor = "#81c784"; // green
     score++;
   } else {
-    alert("❌ Wrong!");
+    btn.style.backgroundColor = "#e57373"; // red
+    options[correct].style.backgroundColor = "#81c784"; // show correct
   }
+
   document.getElementById("score").innerText = `Score: ${score}/${questions.length}`;
 }
 
+// Prev button
 document.getElementById("prev-btn").addEventListener("click", () => {
   if (currentQuestion > 0) {
     currentQuestion--;
@@ -41,6 +50,7 @@ document.getElementById("prev-btn").addEventListener("click", () => {
   }
 });
 
+// ✅ Fixed Next button
 document.getElementById("next-btn").addEventListener("click", () => {
   if (currentQuestion < questions.length - 1) {
     currentQuestion++;
